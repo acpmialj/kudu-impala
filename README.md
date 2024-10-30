@@ -11,9 +11,13 @@ Para eliminar el clúster es necesario que la variable anterior siga teniendo va
 ```
 docker compose -f quickstart.yml down
 ```
+Quedan creados una serie de volúmenes que habría que eliminar para una limpieza total. 
 
 ## Lanzamiento de Impala
 Ejecutar el script launch_impala.sh
+```
+sh launch_impala.sh
+```
 
 El contenedor expone estos puertos
 
@@ -23,8 +27,29 @@ El contenedor expone estos puertos
 * 25010:25010: webUI statestored
 * 25020:25020: webUI catalogd
 
+Tras esto nos conectamos al CLI de Impala:
+```
+docker exec -it kudu-impala impala-shell
+```
+Creamos una base de datos almacenada en Kudu e insertamos algunos datos:
+```
+CREATE TABLE my_first_table
+(
+  id BIGINT,
+  name STRING,
+  PRIMARY KEY(id)
+)
+PARTITION BY HASH PARTITIONS 4
+STORED AS KUDU;
+
+DESCRIBE my_first_table;
+
+INSERT INTO my_first_table VALUES (1, "john"), (2, "jane"), (3, "jim");
+SELECT * FROM my_first_table;
+```
+
 ## Conexión a Superset
-Superset debe tener instalado el driver "impyla". Usamos una versión tuneada e inicializada:
+Superset debe tener instalado el driver "impyla". Usamos una versión tuneada e inicializada (hecha con el Dockerfile de este repositorio).
 
 docker run --rm --network=kudu-impala_default -p 8080:8088 --name superset acpmialj/ipmd:ssuperset
 
