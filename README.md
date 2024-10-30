@@ -44,9 +44,33 @@ STORED AS KUDU;
 
 DESCRIBE my_first_table;
 
+INSERT INTO my_first_table VALUES (99, "sarah");
 INSERT INTO my_first_table VALUES (1, "john"), (2, "jane"), (3, "jim");
 SELECT * FROM my_first_table;
+
+UPDATE my_first_table SET name="bob" where id = 3;
+SELECT * FROM my_first_table;
+
+DELETE FROM my_first_table WHERE id = 99;
+SELECT * FROM my_first_table;
+
+DELETE FROM my_first_table WHERE id < 3;
+SELECT * FROM my_first_table;
+
+CREATE EXTERNAL TABLE my_second_table
+STORED AS KUDU
+TBLPROPERTIES('kudu.table_name' = 'impala::default.my_first_table');
+
+DESCRIBE my_second_table;
+DESCRIBE EXTENDED my_second_table;
+
+DROP TABLE my_second_table;
+DROP TABLE my_first_table;
+
+exit;
 ```
+Podemos eliminar el contenedor con "docker stop" y, si es necesario, con "docker rm".
+
 
 ## Conexión a Superset
 Superset debe tener instalado el driver "impyla". Usamos una versión tuneada e inicializada (hecha con el Dockerfile de este repositorio).
