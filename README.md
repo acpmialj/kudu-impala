@@ -74,10 +74,10 @@ Podemos eliminar el contenedor con "docker stop" y, si es necesario, con "docker
 
 ## Conexión a Superset
 Superset debe tener instalado el driver "impyla". Usamos una versión tuneada e inicializada (hecha con el Dockerfile de este repositorio).
-
+```
 docker run --rm --network=kudu-impala_default -p 8080:8088 --name superset acpmialj/ipmd:ssuperset
-
+```
 El SQLALCHEMY URI debe tener la forma impala://{hostname}:{port}/{database}. Para este caso particular:
-
+```
 impala://kudu-impala:21050/default
-
+```
